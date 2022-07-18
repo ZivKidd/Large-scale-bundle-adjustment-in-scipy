@@ -94,6 +94,8 @@ def bundle_adjustment_sparsity(n_cameras, n_points, camera_indices, point_indice
 
     i = np.arange(camera_indices.size)
     for s in range(9):
+        # 2 * i,2 * i + 1行分别为u和v的误差项
+        # camera_indices * 9 + s列为当前相机的9个参数
         A[2 * i, camera_indices * 9 + s] = 1
         A[2 * i + 1, camera_indices * 9 + s] = 1
 
@@ -126,7 +128,9 @@ print("n_points: {}".format(n_points))
 print("Total number of parameters: {}".format(n))
 print("Total number of residuals: {}".format(m))
 
+# 把相片参数和三维点坐标全部展开成一维，23769*1=49（相片数）*9+7776（三维点数）*3
 x0 = np.hstack((camera_params.ravel(), points_3d.ravel()))
+
 f0 = fun(x0, n_cameras, n_points, camera_indices, point_indices, points_2d)
 
 plt.figure(1)
